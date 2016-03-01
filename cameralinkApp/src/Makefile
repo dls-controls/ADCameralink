@@ -28,6 +28,11 @@ LIB_SRCS    += cl_com_port2.cpp
 LIB_SRCS    += logfile.cpp
 LIB_SRCS    += ADCameralink.cpp
 
+INC += ADCameralink.h
+INC += ccd_exception.h
+INC += comportInterface.h
+
+
 
 
 
