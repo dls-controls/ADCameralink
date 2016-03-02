@@ -31,9 +31,12 @@ LIB_SRCS    += ADCameralink.cpp
 INC += ADCameralink.h
 INC += ccd_exception.h
 INC += comportInterface.h
-
-
-
+INC += coreco.h
+INC += logfile.h
+INC += stopWatch.h
+INC += siswSerialPort.h
+INC += cl_com_port2.h
+INC += siliconSoftware.h
 
 
 #one or the other
