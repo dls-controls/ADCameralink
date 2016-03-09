@@ -14,6 +14,7 @@ static const char *driverName = "ADCameralink";
 
 /** 
  * This function is called when the exposure time timer expires 
+ * @param   drvPvt  Pointer to ADCameralink object.
  */
  
 extern "C" void timerCallbackC(void *drvPvt) {
@@ -24,6 +25,7 @@ extern "C" void timerCallbackC(void *drvPvt) {
 
 /**
  * Runs on own thread to get images from the grabber.
+ * @param   drvPvt  Pointer to ADCameralink object.
  */
  
 static void ADCameralinkGetImageTask(void *drvPvt) {
@@ -34,7 +36,7 @@ static void ADCameralinkGetImageTask(void *drvPvt) {
 
 
 /**
- * Sets amount of debugging message flood the screen.
+ * Sets amount of debugging message flood the screen. DEPRECATED
  */
  
 void ADCameralink::setDebuggingMessage(int level) { dbg_msg_level = level; }
@@ -134,6 +136,8 @@ asynStatus ADCameralink::writeInt32(asynUser *pasynUser, epicsInt32 value) {
 
 /**
  * Helper function for getIntegerparam, returns an int.
+ * @param param asyn parameter ID. 
+ * @return  Value of param in asyn param library.
  */
  
 int ADCameralink::getIntParam(int param) {
@@ -145,6 +149,7 @@ int ADCameralink::getIntParam(int param) {
 
 /**
  * Helper for getDoubleParam, returns double.
+ 
  */
  
 double ADCameralink::getDoubleParam(int param) {
@@ -156,6 +161,8 @@ double ADCameralink::getDoubleParam(int param) {
 
 /**
  * Helper for getString Param, returns char*.
+ * @param param asyn parameter ID. 
+ * @return  Value of param in asyn param library.
  */
  
 char *ADCameralink::getStringParam(int param) {
@@ -217,6 +224,18 @@ void ADCameralink::report(FILE *fp, int details) {
   ADDriver::report(fp, details);
 }
 
+/**
+ * Create ADCameralink driver. 
+ * @param   portName        C string for asyn port name for this driver.
+ * @param   serverPort      C string for asyn port name for serial port driver.
+ * @param   maxBuffers      max num NDArrays to create
+ * @param   maxMemory       max amount of memory to grab
+ * @param   priority        thread prioroty from 0-100. Use 50.
+ * @param   stackSize       Set to 0.
+ * 
+ * @return  asynSuccess always...
+ */
+ 
 extern "C" int ADCameralinkConfig(const char *portName, const char *serverPort,
                                   int maxBuffers, size_t maxMemory,
                                   int priority, int stackSize) {
@@ -526,6 +545,11 @@ ADCameralink::ADCameralink(const char *portName, const char *serverPort,
   }
 }
 
+/**
+ *  Run on a thread to get images from grabber. Poll for images and return them through AD callbacks.
+ *  @param arg  not used.
+ */
+
 void ADCameralink::getImageTask(int arg) {
   double exp_elapsedtime;
   double last_exptime = 0.0;
@@ -573,6 +597,12 @@ void ADCameralink::getImageTask(int arg) {
   // delete(cameralink_card);
 
 }  // main
+
+/**
+ * One loop of the image polling routine.
+ * 
+ */
+ 
 
 void ADCameralink::oneLoopImage(void) {
   char mesx[256];
@@ -830,6 +860,7 @@ void ADCameralink::keepHouse(void) {}
 
 /**
  *	 Set up grabber related parameters. Called by writeIntParam, function passed from writeIntparam. 
+ * @param   function    asyn parameter id.
  */
  
 void ADCameralink::grabberSetup(int function) {

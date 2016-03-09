@@ -25,6 +25,8 @@ ccd_exception::ccd_exception() {
 
 /**
  * Constructor to spec. error string and code as int. 
+ * @param   er      enum or int for error code. user picks it.
+ * @param   mess    Some string to put into error message, like "camera error blah blah.."
  */
  
 ccd_exception::ccd_exception(error_code er, const char *mess) {
@@ -34,12 +36,14 @@ ccd_exception::ccd_exception(error_code er, const char *mess) {
 
 /**
  * construcor for speced error code. 
+ * @param   er      enum or int for error code. user picks it.
  */
  
 ccd_exception::ccd_exception(error_code er) { code = er; }
 
 /**
  * Constructor to spec error string. . 
+ * @param   mess    Some string to put into error message, like "camera error blah blah.."
  */
  
 ccd_exception::ccd_exception(const char *x) {
@@ -49,12 +53,14 @@ ccd_exception::ccd_exception(const char *x) {
 
 /**
  * Return error message. 
+ * @return string in the error exception.
  */
  
 char *ccd_exception::err_mess(void) { return err; }
 
 /**
  * return error code.
+ * @return  int that is error code.
  */
  
 ccd_exception::error_code ccd_exception::getErrCode(void) { return code; }

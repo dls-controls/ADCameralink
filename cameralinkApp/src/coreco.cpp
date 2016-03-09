@@ -41,6 +41,7 @@ coreco *coreco::mycard = 0;
 /**
  * Open new dalsa (coreco) grabber, init grabber. if grabber has fpga on board spec if we use it.
  * if no fpga, set to false. 
+ * @param   is_use_fpga True to use on board fpga. Most grabbers not have one.
  */
  
 coreco::coreco(bool is_use_fpga) {
@@ -79,6 +80,7 @@ coreco::coreco(bool is_use_fpga) {
 
 /**
  * Return enum spec'ing grabber vendor. 
+ * @return  Enum for whic grabber type, like dalsa or sisw. whch company made grabber card.
  */
  
 int coreco::getGrabberType() { return ((int)gDALSA); }
@@ -95,21 +97,31 @@ void coreco::makeView(void) {
 
 /**
  *  set num memory buffers (num images) that grabber stores in memory. 
+ * @param   b   Num mem buff to make.
  */
  
 void coreco::setNumBuffers(int b) { num_buffers = b; }
 
 /**
  * return num buffers in grabber that are free.  
+ * @return num buffers in grabber that are free.  
  */
  
  int coreco::getNumFreeBuffers(void) {
   return (sap_buffer_count - (frame_count - frames_to_cpu));
 }
+
+/**
+ * return num buffers in grabber .  
+ * @return  num buffers in grabber .  
+ */
+ 
+
 int coreco::getNumBuffers(void) { return (sap_buffer_count); }
 
 /**
  * return true of new frame is available. else return false.  
+ * @return  T of frame available, else F.
  */
  
 bool coreco::isFrameAvailable(void) {
@@ -121,6 +133,7 @@ bool coreco::isFrameAvailable(void) {
 /**
  * sime grabbers have double width mode, where if we have 1k image size in x direction , we have to set to 2x.
  * this has to do with data size of pixels in the grabber.  
+ * @param  isdw 1 or 0 for using double width mode. only SISW in 10 tap mode need this. 
  */
  
 void coreco::setDoubleWidth(int isdw) { is_double_width = isdw; }
@@ -128,6 +141,7 @@ void coreco::setDoubleWidth(int isdw) { is_double_width = isdw; }
 
 /**
  * return true if grabber missed a frame. else false.
+ * @return  true if grabber missed a frame. else false.
  */
  
 bool coreco::isMissedFrame(void) { return (is_missed_frame); }
@@ -144,12 +158,14 @@ void coreco::clearMissedFrames(void) {
 
 /**
  * return num missed frames since grabber was initialized.  
+ * @return  num missed frames since grabber was initialized
  */
  
 long coreco::getTotalMissedFrames(void) { return (missed_frames); }
 
 /**
  * return num missed frames since we last checked and cleared flags. 
+ * @return  num missed frames since we last checked and cleared flags. 
  */
  
 long coreco::getRecentMissedFrames(void) { return (recent_missed_frames); }
@@ -158,6 +174,9 @@ long coreco::getRecentMissedFrames(void) { return (recent_missed_frames); }
 
 /**
  * get latest frame fram camera.  
+ * @param   copy_memory Mem in which to put image.
+ * @param   coreco_timestamp    int in which to put HW timestamp from grabber.
+ * @return  true of we got image correctly, lse false.
  */
  
 bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp) {
@@ -199,6 +218,10 @@ void coreco::resetBufferCount(void) {
 
 /**
  * get latest frame, supply mem to copy, get time stamp in to supplied mem. tell max num bytes. to return. 
+ * @param   copy_memory Mem in which to put new frame
+ * @param   coreco_timestamp    int in which to put HW timestamp
+ * @param   nbytes  max num bytes to copy
+ * @return  true of success, else false.
  */
  
 bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp,
@@ -227,6 +250,8 @@ bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp,
 
 /**
  * get lastes frame into supplied memroy.  
+ * @param   copy_memory mem in  which to put new frame
+ * @return  t or f based on success.
  */
  
 bool coreco::getFrame(void *copy_memory) {
@@ -260,6 +285,7 @@ bool coreco::getFrame(void *copy_memory) {
 /**
  * when frame comes in to grabber, this callback uis called. Called by vendor grabber thread
 * under the hood. this callback passed to vendor driver.  
+ * @param   pInfo SapXferCallbackInfo obj.
  */
  
 void coreco::XferCallback(SapXferCallbackInfo *pInfo) {
@@ -281,6 +307,7 @@ void coreco::XferCallback(SapXferCallbackInfo *pInfo) {
 
 /**
  * callback when signal changes on grabber like clock etc. 
+ * @param   SapAcqCallbackInfo obj.
  */
  
 void coreco::SignalCallback(SapAcqCallbackInfo *pInfo) {
@@ -303,12 +330,14 @@ void coreco::setCamController(void *cc) {
 
 /**
  * get image width. 
+ * @return  image width
  */
  
 int coreco::getWidth(void) { return (sensor_width); }
 
 /**
  * get image height 
+ * @return  image height 
  */
  
 int coreco::getHeight(void) { return (sensor_height); }
@@ -320,6 +349,9 @@ int coreco::getHeight(void) { return (sensor_height); }
 
 /**
  * Init the grabber for x and y size images.  reads the config file set in object.
+ * @param  size_x  x size of image. 
+ * @param  size_y  y size of image.
+ * @return  true on success
  * 
  */
  
@@ -357,6 +389,10 @@ bool coreco::initialize(int size_x, int size_y) {
 
 /**
  * We generally use this one. sets uip gravbber and forces img size to x and y.  
+ * @param  size_x  x size of image
+ * @param  size_y  y size of image
+ * @param   is_force_size  force image size. we ususlly set to true. ignore any other settigs on config file re image size.
+ * @return  true of success.
  */
  
 bool coreco::initialize(int size_x, int size_y, bool is_force_size) {
@@ -398,6 +434,7 @@ bool coreco::initialize(int size_x, int size_y, bool is_force_size) {
 /**
  * set grabber config file name. we init from a file, and edit the x and y sizes.
  * vendor config file has 100 params or so, and all we set is x y size programattically.
+ * @param   
  * 
  */
  
@@ -405,6 +442,7 @@ void coreco::setConfigFileName(char *name) { strcpy(camera_format_file, name); }
 
 /**
  * Dalsa needs this for it sdriver. makes SapAcq object.  
+ * @return  SapAcquisition pointer
  */
  
 SapAcquisition *coreco::makeAcquision() {
@@ -437,6 +475,7 @@ SapAcquisition *coreco::makeAcquision() {
 
 /**
  * Creates dalsa objects per the Dalsa API. 
+ * @return  true of success.
  */
  
 bool coreco::CreateObjects() {
@@ -513,6 +552,7 @@ bool coreco::CreateObjects() {
 
 /**
  * Kills Dalsa API objects for shutting down grabber. 
+ * @return  true if success. 
  */
  
 bool coreco::DestroyObjects() {
@@ -546,6 +586,7 @@ bool coreco::DestroyObjects() {
 
 /**
  *  destroys Dalsa API objects, no delete memory. 
+ * @return  true if success. 
  */
  
 bool coreco::DestroyObjectsNoDelete() {
@@ -653,6 +694,7 @@ void coreco::GetSignalStatus() {
 
 /**
  *  get signal stat like clk present on grabber. 
+ * @param   
  */
  
 void coreco::GetSignalStatus(SapAcquisition::SignalStatus signalStatus) {
@@ -662,6 +704,8 @@ void coreco::GetSignalStatus(SapAcquisition::SignalStatus signalStatus) {
 /**
  * set CameraLink pin. CL has 4 user pins to trigger camera. Sets on of the pins. String is
  *"CC0", "CC1", "CC2", "CC3", and 0 or 1 for val. 
+ * @param   pinstr  C strign for pin name. "CC0" to CC3
+ * @param   val 1 or 0 for on or off .
  */
  
 void coreco::setPin(char *pinstr, int val) {

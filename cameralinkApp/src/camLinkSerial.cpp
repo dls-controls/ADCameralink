@@ -30,7 +30,9 @@ static const char *driverName = "camLinkSerial";
 /**
  *	for setting key val pairs to serial port. 
  * 	clearpipe optino for reading out all garbage in the serial port .
- *  
+ *  @param pasynUser    standard asyn user obj.
+ *  @param key          C string for key.
+ *  @param value        C string for valuie.
  */
 
  asynStatus camLinkSerial::writeOption(asynUser *pasynUser, const char *key,
@@ -94,6 +96,10 @@ void camLinkSerial::optionsToSerial(void) {
 
 /**
  *  Read options from serial port. 
+ * @param   pasynUser   Standard asyn User obj.
+ * @param   key         C string key. name of option. Set by caller.
+ * @param   value       c strign value of opton. Returned.
+ * @param   maxChars    max num chars to put into value.
  */
 
 asynStatus camLinkSerial::readOption(asynUser *pasynUser, const char *key,
@@ -111,12 +117,12 @@ asynStatus camLinkSerial::readOption(asynUser *pasynUser, const char *key,
 
 
 /**
- * Called by asyn write Octet.
- * takes asynuser,
- * value, a string.
- * size_t chars, len of string, max.
- * size_t, nActial, actuial len of string. 
- * writes the octet of bytes to the serial port. 
+ * Called by asyn write Octet.writes the octet of bytes to the serial port. 
+ * @param  pasynUser
+ *  @param  value  a string.
+ * @param   nchars  len of string, max.
+ * @param   nActial  actuial len of string. 
+ * 
  */
 
 asynStatus camLinkSerial::writeOctet(asynUser *pasynUser, const char *value,
@@ -137,6 +143,12 @@ asynStatus camLinkSerial::writeOctet(asynUser *pasynUser, const char *value,
 /**
  * 
  * reads the serial port back to epics driver. 
+ * @param pasynUser     asyn User obj.
+ * @param value         memory in which to put data from ser port.
+ * @param maxChars      size of mem value
+ * @param nActual       actual chars read into value
+ * @param eomReason     set to 0
+ * @return  always return asynSucess. 
  */
 
 asynStatus camLinkSerial::readOctet(asynUser *pasynUser, char *value,
@@ -153,6 +165,8 @@ asynStatus camLinkSerial::readOctet(asynUser *pasynUser, char *value,
 
 /**
  *  Flushes the serial port. 
+ * @param pasynUser asyn uiser. Not actually needed....
+ * @return  asynSuccess always returned.
  */
 
 asynStatus camLinkSerial::flushOctet(asynUser *pasynUser) {
@@ -169,7 +183,16 @@ void camLinkSerial::report(FILE *fp, int details) {
 }
 
 /**
- * constructor. Same as asynPortdriver stuff.  
+ * constructor for camLinkSerial. 
+ * @param   portName        Port name of this asyn driver.
+ * @param   comportname     name of com port, like "COM1" Some grabbers want this. Others dont.
+ * @param   maxAddr         Set to 0. 
+ * @param   interfaceMask   asyn interface mask bits
+ * @param   interruptMask   asyn interrupt mask bits
+ * @param   asynFlags       asyn flag bits
+ * @param   autoConnect     1 for autoconnect ON. We use 1.
+ * @param   priority        Use 50. Sets thread priority from 0 to 100
+ * @param   stackSize       Use 0. Automatic stack size.
  */
 
 camLinkSerial::camLinkSerial(const char *portName, const char *comportname,
@@ -223,6 +246,8 @@ camLinkSerial::camLinkSerial(const char *portName, const char *comportname,
 extern "C" {
 /*
  * Configure and register a generic serial device
+ * @param   portName        asyn Driver port name
+ * @param   comportname     name like COM1 for grabbers that want it. 
  */
 int drvCamlinkSerialConfigure(char *portName, char *comportname) {
   camLinkSerial *a = new camLinkSerial(portName, comportname,
