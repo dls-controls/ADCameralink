@@ -104,7 +104,8 @@ asynStatus ADCameralink::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   asynStatus status = asynSuccess;
 
   if (function == ADAcquire)
-    printf("ADCameralink::writeInt32  ADacquire %d\n ", value);
+    asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,
+	  "ADCameralink::writeInt32  ADacquire %d\n ", value);
 
   status = setIntegerParam(function, value);
 
@@ -287,6 +288,10 @@ ADCameralink::ADCameralink(const char *portName, const char *serverPort,
 
   int status = asynSuccess;
 
+  #ifdef LOGFILE_USE_ASYN
+  lf.setAsynUser(pasynUserSelf);
+  #endif
+  
   lf.enablePrintf(true);
   lf.log("ADCameralink construcitng");
 
@@ -538,7 +543,7 @@ ADCameralink::ADCameralink(const char *portName, const char *serverPort,
                               (EPICSTHREADFUNC)ADCameralinkGetImageTask,
                               this) == NULL);
   if (status) {
-    printf(
+    asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,
         "ADCameralink construct epicsThreadCreate failure for data collection "
         "task\n");
     return;
@@ -649,8 +654,9 @@ void ADCameralink::oneLoopImage(void) {
                       cameralink_card->getTotalMissedFrames());
       setIntegerParam(recent_missed_frames,
                       cameralink_card->getRecentMissedFrames());
-      printf("cameralinkCam: ERROR: TOTAL MISSED FRAMES = %d\n",
-             getIntParam(total_missed_frames));
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,
+	    "cameralinkCam: ERROR: TOTAL MISSED FRAMES = %d\n",
+        getIntParam(total_missed_frames));
       cameralink_card->clearMissedFrames();
       releaseGrabberMutex();
     }

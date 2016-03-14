@@ -43,6 +43,11 @@ INC += siliconSoftware.h
 #USR_CXXFLAGS += /D USE_SAP
 USR_CXXFLAGS_Linux += -DUSE_SISW
 
+#let logfile.cpp use asynPrint instead of printf
+USR_CXXFLAGS_WIN32 += /D LOGFILE_USE_ASYN
+USR_CXXFLAGS_Linux += -D LOGFILE_USE_ASYN
+
+
 USR_CXXFLAGS_WIN32 += /D USE_SISW
 #USR_CXXFLAGS_WIN32 += /D USE_SAP
 

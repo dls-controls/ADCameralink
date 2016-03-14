@@ -14,6 +14,7 @@
 
 #include "comportInterface.h"
 #include "siswSerialPort.h"
+#include "logfile.h"
 
 #ifdef _WIN32
 #include "cl_com_port2.h"
@@ -66,9 +67,11 @@ class epicsShareFunc camLinkSerial : public asynPortDriver {
   int clser_last;
 #define LAST_CLS_PARAM clser_last
 
+
   //
   // End params
   //
+  log_file lf;
 };
 
 #define NUM_CLS_PARAMS (&LAST_CLS_PARAM - &FIRST_CLS_PARAM + 1)

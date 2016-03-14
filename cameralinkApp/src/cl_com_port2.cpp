@@ -14,9 +14,10 @@
  * @param   name    C string like "COM2"
  */
  
-cl_com_port::cl_com_port(char *name) {
+cl_com_port::cl_com_port(char *name,log_file *lf_) {
   strcpy(port_name, name);
   is_open = false;
+  lf = lf_;
 }
 
 /**
@@ -66,7 +67,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop) {
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
 
@@ -86,7 +87,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop) {
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
 
@@ -105,7 +106,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop) {
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
   // Set timeouts in milliseconds
@@ -124,7 +125,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop) {
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
 }
@@ -163,7 +164,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop,
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
 
@@ -183,7 +184,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop,
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
 
@@ -202,7 +203,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop,
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
   // Set timeouts in milliseconds
@@ -221,7 +222,7 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop,
 #ifdef THROWS
     throw ccd_exception(errmess);
 #else
-    printf(errmess);
+    lf->log(errmess);
 #endif
   }
 }
@@ -248,7 +249,7 @@ void cl_com_port::open(void) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::open cannot open for some reason");
 #else
-    printf("cl_com_port::open cannot open for some reason\n");
+    lf->log("cl_com_port::open cannot open for some reason\n");
 #endif
   }
 
@@ -265,7 +266,7 @@ void cl_com_port::open(void) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::open GetCommState failed.");
 #else
-    printf("cl_com_port::open GetCommState failed.\n");
+    lf->log("cl_com_port::open GetCommState failed.\n");
 #endif
   }
 
@@ -280,7 +281,7 @@ void cl_com_port::open(void) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::open cannot set baud rate etc.");
 #else
-    printf("cl_com_port::open cannot set baud rate etc.\n");
+    lf->log("cl_com_port::open cannot set baud rate etc.\n");
 #endif
   }
   // Set timeouts in milliseconds
@@ -296,7 +297,7 @@ void cl_com_port::open(void) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::open cannot set timeouts");
 #else
-    printf("cl_com_port::open cannot set timeouts\n");
+    lf->log("cl_com_port::open cannot set timeouts\n");
 #endif
   }
 }
@@ -336,7 +337,7 @@ void cl_com_port::write(unsigned char *buffer, int length) {
 #ifdef THROWS
       throw ccd_exception(errmess);
 #else
-      printf(errmess);
+      lf->log(errmess);
 #endif
     }
 
@@ -344,7 +345,7 @@ void cl_com_port::write(unsigned char *buffer, int length) {
 #ifdef THROWS
       throw ccd_exception("cl_com_port::write Did not send all bytes.");
 #else
-      printf("cl_com_port::write Did not send all bytes.\n");
+      lf->log("cl_com_port::write Did not send all bytes.\n");
 #endif
     }
 
@@ -352,7 +353,7 @@ void cl_com_port::write(unsigned char *buffer, int length) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::write Port is closed.");
 #else
-    printf("cl_com_port::write Port is closed\n");
+    lf->log("cl_com_port::write Port is closed\n");
 #endif
   }
 }
@@ -393,7 +394,7 @@ void cl_com_port::read(unsigned char *buffer, int length) {
 #ifdef THROWS
       throw ccd_exception(errmess);
 #else
-      printf(errmess);
+      lf->log(errmess);
 #endif
     }
     // we assume EOF here...
@@ -404,7 +405,7 @@ void cl_com_port::read(unsigned char *buffer, int length) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::read Port is closed\n");
 #else
-    printf("cl_com_port::read Port is closed\n");
+    lf->log("cl_com_port::read Port is closed\n");
 #endif
   }
 }
@@ -415,7 +416,7 @@ void cl_com_port::flush(void) {
 #ifdef THROWS
     throw ccd_exception("cl_com_port::flush Port is closed");
 #else
-    printf("cl_com_port::flush Port is closed\n");
+    lf->log("cl_com_port::flush Port is closed\n");
 #endif
   }
 }

@@ -15,6 +15,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+//let logfile.cpp use asynPrint instead of printf
+#ifdef LOGFILE_USE_ASYN
+#include "asynPortDriver.h"
+#endif
+
 /*
  * Double incluson protection.
  */
@@ -42,7 +47,10 @@ class log_file {
   void logNoDate(char* message);
   void puts(char* message, int len);
   void enablePrintf(bool is_pr);
-
+  #ifdef LOGFILE_USE_ASYN
+  void setAsynUser(asynUser *pasynUser);
+  #endif
+  
  protected:
   enum { num_saved_files = 5 };
 
@@ -51,6 +59,12 @@ class log_file {
   char log_file_name[255];
   bool is_enabled;
   bool is_printf;
+  
+   #ifdef LOGFILE_USE_ASYN
+   // pointer to asyn user, so we can use asynPrint
+   asynUser *pasynUserSelf;
+   #endif
+  
 };
 
 #endif

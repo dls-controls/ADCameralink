@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include "logfile.h"
 #include "time.h"
 #include "comportInterface.h"
 #include "ccd_exception.h"
@@ -39,7 +40,7 @@
 
 class siswSerialPort : public comportInterface {
  public:
-  siswSerialPort(char *name);
+  siswSerialPort(char *name,log_file *lf_);
   ~siswSerialPort();
   /*
    * ports we can write to
@@ -75,6 +76,7 @@ class siswSerialPort : public comportInterface {
 
   void *serial_ref;
   char mesgx[512];
+  log_file *lf;
 };
 
 #endif

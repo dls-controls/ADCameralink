@@ -18,6 +18,7 @@
 #include "time.h"
 #include "comportInterface.h"
 #include "CCD_exception.h"
+#include "logfile.h"
 /*
  * Double incluson protection.
  */
@@ -30,7 +31,7 @@
 
 class cl_com_port : public comportInterface {
  public:
-  cl_com_port(char *name);
+  cl_com_port(char *name,log_file *lf_);
   ~cl_com_port();
   /*
    * ports we can write to
@@ -79,6 +80,7 @@ class cl_com_port : public comportInterface {
   COMMTIMEOUTS CommTimeouts;
 
   char port_name[64];
+  log_file *lf;
 };
 
 #endif

@@ -55,7 +55,19 @@ log_file::log_file(char* filename) {
       if (access(fnameto, F_OK) != -1) remove(fnameto);
 
       rename(fnamefrom, fnameto);
+	  
+	  #ifdef LOGFILE_USE_ASYN
+	    if (pasynUserSelf!=NULL) {
+		  asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+		    "logfile::logfile cp %s to %s\n", fnamefrom, fnameto);
+		}
+		else
+		  printf("logfile::logfile cp %s to %s\n", fnamefrom, fnameto);		  
+	  #else
       printf("logfile::logfile cp %s to %s\n", fnamefrom, fnameto);
+	  #endif
+	  
+	  
     }
   }
 
@@ -72,6 +84,10 @@ log_file::log_file(char* filename) {
   }
   is_enabled = true;
   is_printf = false;
+  
+   #ifdef LOGFILE_USE_ASYN
+   pasynUserSelf=0;
+  #endif
 }
 
 
@@ -97,8 +113,21 @@ void log_file::log(char* message) {
       time(&tp);
       fprintf(fp, "%s  -%s \n", ctime(&tp), message);
 
-      if (is_printf) printf("%s  -%s \n", ctime(&tp), message);
-
+      if (is_printf) {
+		
+	  #ifdef LOGFILE_USE_ASYN
+	    if (pasynUserSelf!=NULL)
+		  asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+		    "%s  -%s \n", ctime(&tp), message);
+		else
+	      printf("%s  -%s \n", ctime(&tp), message);	  
+	  #else
+        printf("%s  -%s \n", ctime(&tp), message);
+	  #endif
+	  
+	  
+	  
+      }
       fflush(fp);
       // fclose(fp);
       // fp=0;
@@ -119,7 +148,19 @@ void log_file::logNoDate(char* message) {
     if (fp != 0) {
       time(&tp);
       fprintf(fp, "%s", message);
-      if (is_printf) printf("%s", message);
+      
+	  if (is_printf) {
+	  
+	    #ifdef LOGFILE_USE_ASYN
+	    if (pasynUserSelf!=NULL)
+          asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+		    "%s", message);
+		else
+	      printf("%s", message);	  
+	    #else
+        printf("%s", message);
+	    #endif
+	    }
 
       fflush(fp);
       // fclose(fp);
@@ -143,7 +184,17 @@ void log_file::logNoDate(char* message) {
         cxx = (unsigned char)message[i];
         ixx = (unsigned short)cxx;
         fprintf(fp, "%x \n", ixx);
-        if (is_printf) printf("%x \n", ixx);
+        if (is_printf) {
+		#ifdef LOGFILE_USE_ASYN
+	    if (pasynUserSelf!=NULL)
+		  asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
+		    "%x \n", ixx);
+		else
+	      printf("%x \n", ixx);	  
+	    #else
+        printf("%x \n", ixx);
+	    #endif		
+		}
       }
       fflush(fp);
       // fclose(fp);
@@ -163,3 +214,16 @@ void log_file::enableLog(bool is_en) { is_enabled = is_en; }
  */
  
 void log_file::enablePrintf(bool is_en) { is_printf = is_en; }
+
+
+ #ifdef LOGFILE_USE_ASYN
+ /**
+  * Set a pointer to an ADDriver object, so we can use asynPrint instead of 
+  * printf.
+  * @param ad	Pointer to an ADDriver object. 
+  */
+  
+  void log_file::setAsynUser(asynUser *pasynUser) {
+	pasynUserSelf = pasynUser;
+  }
+  #endif

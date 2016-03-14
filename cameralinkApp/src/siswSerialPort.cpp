@@ -70,7 +70,7 @@ void siswSerialPort::readDll(void) {
 
   HMODULE hMod;
 
-  printf("Loading C:/CameraLink/Serial/clsersis.dll\n");
+  lf->log("Loading C:/CameraLink/Serial/clsersis.dll\n");
 
 #ifdef _WIN32
   hMod = LoadLibrary("C:/CameraLink/Serial/clsersis.dll");
@@ -79,7 +79,7 @@ void siswSerialPort::readDll(void) {
 #endif
 
   if (hMod == NULL) {
-    printf("Could not find camlink serial lib\n");
+    lf->log("Could not find camlink serial lib\n");
     exit(-1);
   }
 
@@ -127,7 +127,7 @@ void siswSerialPort::readDll(void) {
       GetProcAddress(hMod, "clGetErrorText");
 
   if (clSerialInit == NULL) {
-    printf("Cound not find clSerialInit in dll\n");
+    lf->log("Cound not find clSerialInit in dll\n");
     exit(-1);
   }
 }
@@ -136,9 +136,10 @@ void siswSerialPort::readDll(void) {
  * Make serial port obhect. name is like "COM1" but not used.  
  */
 
- siswSerialPort::siswSerialPort(char* name) {
+ siswSerialPort::siswSerialPort(char* name,log_file *lf_) {
   is_open = false;
   readDll();
+  lf = lf_;
 }
 
  /**
@@ -193,13 +194,15 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
   int stat = -1;
   while (stat < 0) {
     stat = clSerialInit(cardnum, &serial_ref);
-    printf("SiSW Card Num %d,  OPen Serial Status %i SerialRefPtr %d \n",
+	char mm[256];
+    sprintf(mm,"SiSW Card Num %d,  OPen Serial Status %i SerialRefPtr %d \n",
            cardnum, stat, serial_ref);
-
+    lf->log(mm);
+	
     if (stat != 0) {
       unsigned int xx = 512;
       clGetErrorText(stat, mesgx, &xx);
-      printf("ERROR: %s\n", mesgx);
+      lf->log( mesgx);
     }
     cardnum++;
 
@@ -207,7 +210,7 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
 #ifdef THROWS
       throw ccd_exception("cannot open SISW card");
 #else
-      printf("cannot open SISW card\n");
+      lf->log("cannot open SISW card\n");
 #endif
     }
   }
@@ -217,14 +220,14 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
   if (stat != 0) {
     unsigned int xx = 512;
     clGetErrorText(stat, mesgx, &xx);
-    printf("ERROR: %s\n", mesgx);
+    lf->log(mesgx);
   }
 
   stat = clSetParity(serial_ref, parity);
   if (stat != 0) {
     unsigned int xx = 512;
     clGetErrorText(stat, mesgx, &xx);
-    printf("ERROR: %s\n", mesgx);
+    lf->log(mesgx);
   }
 
   is_open = true;
@@ -261,14 +264,14 @@ void siswSerialPort::write(unsigned char* buffer, int length) {
     if (stat != 0) {
       unsigned int xx = 512;
       clGetErrorText(stat, mesgx, &xx);
-      printf("ERROR: %s\n", mesgx);
+      lf->log(mesgx);
     }
 
   } else {
 #ifdef THROWS
     throw ccd_exception("siswSerialPort::write  NOT OPEN");
 #else
-    printf("siswSerialPort::write  NOT OPEN\n");
+    lf->log("siswSerialPort::write  NOT OPEN\n");
 #endif
   }
 }
@@ -285,7 +288,7 @@ unsigned char siswSerialPort::read(void) {
 #ifdef THROWS
     throw ccd_exception("siswSerialPort::read Port is closed");
 #else
-    printf("siswSerialPort::read Port is closed\n");
+    lf->log("siswSerialPort::read Port is closed");
 #endif
   }
   return (buffer[0]);
@@ -319,15 +322,17 @@ void siswSerialPort::read(unsigned char* buffer, int length) {
     if (stat != 0) {
       unsigned int xx = 512;
       clGetErrorText(stat, mesgx, &xx);
-      printf("Read Error: stat= %d req len=%d ret length = %d \n", stat,
+	  char mm[256];
+      sprintf(mm,"Read Error: stat= %d req len=%d ret length = %d \n", stat,
              lensave, length);
+	  lf->log(mm);
     }
 
   } else {
 #ifdef THROWS
     throw ccd_exception("siswSerialPort::read Port is closed");
 #else
-    printf("siswSerialPort::read Port is closed\n");
+    lf->log("siswSerialPort::read Port is closed\n");
 #endif
   }
 }
@@ -342,14 +347,14 @@ void siswSerialPort::flush(void) {
     if (stat != 0) {
       unsigned int xx = 512;
       clGetErrorText(stat, mesgx, &xx);
-      printf("ERROR: %s\n", mesgx);
+      lf->log(mesgx);
     }
 
   } else {
 #ifdef THROWS
     throw ccd_exception("siswSerialPort::flush Port is closed");
 #else
-    printf("siswSerialPort::flush Port is closed\n");
+    lf->log("siswSerialPort::flush Port is closed\n");
 #endif
   }
 }
@@ -362,7 +367,7 @@ void siswSerialPort::close() {
 #ifdef THROWS
     throw ccd_exception("siswSerialPort::close Port is not open");
 #else
-    printf("siswSerialPort::close Port is not open\n");
+    lf->log("siswSerialPort::close Port is not open\n");
 #endif
   }
 }

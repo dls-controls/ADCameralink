@@ -51,11 +51,12 @@ static const char *driverName = "camLinkSerial";
       optionsToSerial();
 
   } catch (ccd_exception err) {
-    printf("camLinkSerial::writeOption Exception %s\n", err.err_mess());
+    asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,
+	  "camLinkSerial::writeOption Exception %s\n", err.err_mess());
 
   }  // catch
   catch (...) {
-    printf("camLinkSerial::writeOption Unknown Exception \n");
+    asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"camLinkSerial::writeOption Unknown Exception \n");
 
   }  // catch
 
@@ -209,13 +210,20 @@ camLinkSerial::camLinkSerial(const char *portName, const char *comportname,
           asynFlags,
           autoConnect, priority, stackSize),
 
-      option_pairs()
+      option_pairs(),
+	  lf("camLinkSerial_logfile.txt")
 
 {
+
+
+  #ifdef LOGFILE_USE_ASYN
+  lf.setAsynUser(pasynUserSelf);
+  #endif
+  
 #ifndef USE_SISW
-  serial_port = new cl_com_port((char *)comportname);
+  serial_port = new cl_com_port((char *)comportname,&lf);
 #else
-  serial_port = new siswSerialPort(0);
+  serial_port = new siswSerialPort(0,&lf);
 #endif
 
   /*
