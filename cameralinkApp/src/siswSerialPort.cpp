@@ -138,8 +138,9 @@ void siswSerialPort::readDll(void) {
 
  siswSerialPort::siswSerialPort(char* name,log_file *lf_) {
   is_open = false;
-  readDll();
+  
   lf = lf_;
+  readDll();
 }
 
  /**

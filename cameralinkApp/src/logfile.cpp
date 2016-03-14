@@ -56,17 +56,6 @@ log_file::log_file(char* filename) {
 
       rename(fnamefrom, fnameto);
 	  
-	  #ifdef LOGFILE_USE_ASYN
-	    if (pasynUserSelf!=NULL) {
-		  asynPrint(pasynUserSelf, ASYN_TRACEIO_DRIVER,
-		    "logfile::logfile cp %s to %s\n", fnamefrom, fnameto);
-		}
-		else
-		  printf("logfile::logfile cp %s to %s\n", fnamefrom, fnameto);		  
-	  #else
-      printf("logfile::logfile cp %s to %s\n", fnamefrom, fnameto);
-	  #endif
-	  
 	  
     }
   }
