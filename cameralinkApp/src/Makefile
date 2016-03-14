@@ -37,6 +37,8 @@ INC += stopWatch.h
 INC += siswSerialPort.h
 INC += cl_com_port2.h
 INC += siliconSoftware.h
+INC += grabberInterface.h
+
 
 
 #one or the other
