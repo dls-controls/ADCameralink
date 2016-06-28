@@ -25,6 +25,7 @@ LIB_SRCS    += stopWatch.cpp
 LIB_SRCS    += siliconSoftware.cpp
 LIB_SRCS    += softwareGrabber.cpp
 LIB_SRCS    += cl_com_port2.cpp
+LIB_SRCS    += sw_com_port.cpp
 LIB_SRCS    += logfile.cpp
 LIB_SRCS    += ADCameralink.cpp
 
@@ -38,17 +39,22 @@ INC += siswSerialPort.h
 INC += cl_com_port2.h
 INC += siliconSoftware.h
 INC += grabberInterface.h
+INC += sw_com_port.h
+
 
 
 
 #one or the other
 #USR_CXXFLAGS += /D USE_SAP
-USR_CXXFLAGS_Linux += -DUSE_SISW
+USR_CXXFLAGS_Linux += -DUSE_SWGRAB
 
 #let logfile.cpp use asynPrint instead of printf
 USR_CXXFLAGS_WIN32 += /D LOGFILE_USE_ASYN
 USR_CXXFLAGS_Linux += -D LOGFILE_USE_ASYN
 
+
+USR_CXXFLAGS_Linux += -D MEUNIX
+USR_CXXFLAGS_Linux += -D LINUX
 
 USR_CXXFLAGS_WIN32 += /D USE_SISW
 #USR_CXXFLAGS_WIN32 += /D USE_SAP

@@ -14,7 +14,9 @@
 
 #include "comportInterface.h"
 #include "siswSerialPort.h"
+#include "sw_com_port.h"
 #include "logfile.h"
+
 
 #ifdef _WIN32
 #include "cl_com_port2.h"

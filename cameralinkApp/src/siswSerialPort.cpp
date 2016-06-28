@@ -70,12 +70,15 @@ void siswSerialPort::readDll(void) {
 
   HMODULE hMod;
 
-  lf->log("Loading C:/CameraLink/Serial/clsersis.dll\n");
 
 #ifdef _WIN32
   hMod = LoadLibrary("C:/CameraLink/Serial/clsersis.dll");
-#else
-  hMod = LoadLibrary("libclserme4.so", RTLD_NOW);
+  lf->log("Loading C:/CameraLink/Serial/clsersis.dll\n");
+
+  #else
+  lf->log("Loading ./libclsersis.so\n");
+
+  hMod = LoadLibrary("libclsersis.so", RTLD_NOW);
 #endif
 
   if (hMod == NULL) {

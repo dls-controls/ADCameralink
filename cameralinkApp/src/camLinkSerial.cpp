@@ -220,10 +220,13 @@ camLinkSerial::camLinkSerial(const char *portName, const char *comportname,
   lf.setAsynUser(pasynUserSelf);
   #endif
   
-#ifndef USE_SISW
+#ifdef USE_SAP
   serial_port = new cl_com_port((char *)comportname,&lf);
-#else
+#elif USE_SISW
   serial_port = new siswSerialPort(0,&lf);
+#else
+  serial_port = new sw_com_port((char *)comportname,&lf);
+
 #endif
 
   /*

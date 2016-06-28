@@ -407,9 +407,15 @@ ADCameralink::ADCameralink(const char *portName, const char *serverPort,
 #ifdef USE_SAP
   setIntegerParam(cor_grabber_type, grabberInterface::gDALSA);
   ;
-#else
+#endif
+#ifdef USE_SISW
   setIntegerParam(cor_grabber_type, grabberInterface::gSISW);
-  ;
+  
+#else
+
+  setIntegerParam(cor_grabber_type, grabberInterface::gSOFTWARE);
+
+	
 #endif
 
   setIntegerParam(cor_max_ndbuffers, 0);
@@ -993,20 +999,17 @@ void ADCameralink::loadCCF() {
 #ifdef USE_SWGRAB
     cameralink_card = new softwareGrabber();
 
-#else
-#ifdef USE_SAP
+#elif USE_SAP
     cameralink_card = new coreco(false);
 
-#else
-
-#ifdef USE_SISW
+#elif USE_SISW
     cameralink_card = new siSoftware(false);
+    
+  
 #else
 #error NeedToDefineGrabber
     cameralink_card = new softwareGrabber();
     lf.log("Using Software Virtual Grabber");
-#endif
-#endif
 #endif
 
     setIntegerParam(cor_grabber_type, cameralink_card->getGrabberType());
