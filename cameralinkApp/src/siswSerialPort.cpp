@@ -173,6 +173,7 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
   DWORD errcode;
   int baud_index;
   int cardnum = 0;
+  bool could_not_init = false;
 
   if (is_open) {
 #ifdef THROWS
@@ -196,7 +197,14 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
   }
 
   int stat = -1;
-  while (stat < 0) {
+  while (stat < 0 && !could_not_init) {
+
+#ifdef _WIN32
+  Sleep(1);//ms
+#else
+  usleep(1000);//us
+#endif
+  
     stat = clSerialInit(cardnum, &serial_ref);
 	char mm[256];
     sprintf(mm,"SiSW Card Num %d,  OPen Serial Status %i SerialRefPtr %d \n",
@@ -215,10 +223,19 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
       throw ccd_exception("cannot open SISW card");
 #else
       lf->log("cannot open SISW card\n");
+      could_not_init=true;
+      
 #endif
     }
   }
 
+  if (could_not_init)
+  {
+	  is_open = false;
+	  return;
+  }
+  
+  
   stat = clSetBaudRate(serial_ref, baud_index);
 
   if (stat != 0) {

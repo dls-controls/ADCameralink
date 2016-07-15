@@ -998,14 +998,17 @@ void ADCameralink::loadCCF() {
 
 #ifdef USE_SWGRAB
     cameralink_card = new softwareGrabber();
-
+ lf.log("Using Software Virtual Grabber");
 #elif USE_SAP
     cameralink_card = new coreco(false);
-
+    lf.log("Using Dalsa Grabber");
+#elif USE_SISW_DBGSER
+    cameralink_card = new softwareGrabber();
+    lf.log("Using Software Virtual Grabber, but SISW serial port");
+    
 #elif USE_SISW
     cameralink_card = new siSoftware(false);
-    
-  
+    lf.log("Using SISW Grabber");
 #else
 #error NeedToDefineGrabber
     cameralink_card = new softwareGrabber();

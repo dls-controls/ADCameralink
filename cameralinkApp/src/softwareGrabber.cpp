@@ -42,7 +42,18 @@ bool softwareGrabber::initialize(int size_x, int size_y) {
 
 // use to override the image size in the ccf file.
 bool softwareGrabber::initialize(int size_x, int size_y, bool is_force_size) {
-  m_size_x = size_x;
+  
+if (size_x*size_y >6250000)	
+	return(false);
+
+if (size_x <0)
+	return(false);
+
+if (size_y < 0)
+	return(false);
+
+
+m_size_x = size_x;
   m_size_y = size_y;
 
   int k;
@@ -93,6 +104,10 @@ bool softwareGrabber::getFrame(void *copy_memory,
                                unsigned int *coreco_timestamp, int nbytes) {
   if (m_grab == 0) return (false);
 
+  if (nbytes<0) return(false);
+  if (nbytes>12500000) return(false);
+    
+  
   *coreco_timestamp = m_timestamp;
   m_timestamp++;
 
@@ -103,7 +118,7 @@ bool softwareGrabber::getFrame(void *copy_memory,
   imgcnt++;
   imgcnt = imgcnt % nimages;
 
-  epicsThreadSleep(0.01);
+  epicsThreadSleep(0.25);
 
   return (true);
 }

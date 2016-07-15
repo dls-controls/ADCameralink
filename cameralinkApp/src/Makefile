@@ -46,7 +46,11 @@ INC += sw_com_port.h
 
 #one or the other
 #USR_CXXFLAGS += /D USE_SAP
-USR_CXXFLAGS_Linux += -DUSE_SWGRAB
+#USR_CXXFLAGS_Linux += -DUSE_SWGRAB
+USR_CXXFLAGS_Linux += -DUSE_SISW
+#use sisw serioal, sw grabber images
+USR_CXXFLAGS_Linux += -DUSE_SISW_DBGSER
+
 
 #let logfile.cpp use asynPrint instead of printf
 USR_CXXFLAGS_WIN32 += /D LOGFILE_USE_ASYN
