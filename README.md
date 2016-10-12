@@ -94,7 +94,7 @@ The headers and link libraries are included with ADCameralink under
 ADCameralink/siliconSoftwareSupport. This code was extracted from the distributable
 libries. An issue with Windows, is that software works better when installed properly with
 the commercial installer because the PCI card hardware driver must be installed into the Windows
-kernel. The included headers and libs make the build easier. 
+kernel. The included headers and libs make the build easier. Only win64 libs/dlls are included.
 
 You should download in install two pieces of code from Silicon Software
 1) Silicon software device driver. 
