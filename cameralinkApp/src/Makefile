@@ -11,7 +11,10 @@ include $(TOP)/configure/CONFIG
 #=============================
 
 
-LIBRARY_IOC = cameralink
+ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
+  LIBRARY_IOC_WIN32 = cameralink
+endif
+LIBRARY_IOC_Linux = cameralink
 
 #LIB_SRCS    +=legacystubs.c
 
@@ -45,48 +48,34 @@ INC += sw_com_port.h
 
 
 #one or the other
-#USR_CXXFLAGS += /D USE_SAP
+#USR_CXXFLAGS += -DUSE_SAP
 #USR_CXXFLAGS_Linux += -DUSE_SWGRAB
-USR_CXXFLAGS_Linux += -DUSE_SISW
+USR_CXXFLAGS += -DUSE_SISW
 #use sisw serioal, sw grabber images
 USR_CXXFLAGS_Linux += -DUSE_SISW_DBGSER
 
 
 #let logfile.cpp use asynPrint instead of printf
-USR_CXXFLAGS_WIN32 += /D LOGFILE_USE_ASYN
-USR_CXXFLAGS_Linux += -D LOGFILE_USE_ASYN
+USR_CXXFLAGS += -D LOGFILE_USE_ASYN
 
 
 USR_CXXFLAGS_Linux += -D MEUNIX
 USR_CXXFLAGS_Linux += -D LINUX
 
-USR_CXXFLAGS_WIN32 += /D USE_SISW
-#USR_CXXFLAGS_WIN32 += /D USE_SAP
-
 #to use internal serial port code, do not define this
 #define to use seperate asynDruver for seruial port.
-USR_CXXFLAGS_Linux += -D USEASYNSERIAL
-USR_CXXFLAGS_WIN32 += /D USEASYNSERIAL
-
+USR_CXXFLAGS += -D USEASYNSERIAL
 
 
 #define to use the log_file class in camLinkSrc2, else it uses a null sort of class that does notbhgin
-USR_CXXFLAGS_WIN32 += /D USELOGFILE
-USR_CXXFLAGS_Linux += -D USELOGFILE
-
-
-
+USR_CXXFLAGS += -D USELOGFILE
 
 
 #when we build debug.. we need this line?
 #!! for debvug only
 PROD_LDFLAGS_WIN32 = /NODEFAULTLIB:LIBCMT.lib
 
-
-
-
 PROD_LDFLAGS_WIN32 += /NODEFAULTLIB:msvcrt.lib
-
 
 PROD_LDFLAGS_WIN32 += /VERBOSE:LIB
 
@@ -101,10 +90,7 @@ PROD_LDFLAGS_WIN32 += /VERBOSE:LIB
 
 DBD += camLinkSerialSupport.dbd
 
-
-
 include $(ADCORE)/ADApp/commonLibraryMakefile
-
 
 include $(TOP)/configure/RULES
 
