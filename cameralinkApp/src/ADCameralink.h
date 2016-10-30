@@ -8,49 +8,13 @@
 #ifndef _ADCAMERALINK_H
 #define _ADCAMERALINK_H
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <ctype.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-
-#include <epicsTime.h>
-#include <epicsThread.h>
 #include <epicsEvent.h>
+#include <epicsMutex.h>
+#include <epicsTime.h>
 #include <epicsTimer.h>
-#include <epicsMutex.h>
-#include <epicsStdlib.h>
-#include <epicsString.h>
-#include <epicsStdio.h>
-#include <epicsMutex.h>
-#include <cantProceed.h>
-#include <iocsh.h>
-#include <epicsExport.h>
-
-#include <asynOctetSyncIO.h>
-
 #include "ADDriver.h"
-#define _ADIOC_
 #include "grabberInterface.h"
-
-#include "comportInterface.h"
 #include "logfile.h"
-#include "ccd_exception.h"
-#include "coreco.h"
-#include "siliconSoftware.h"
-#include "stopWatch.h"
-#include "siswSerialPort.h"
-
-#include <math.h>
-#include "time.h"
-
-#ifndef _WIN32
-#define NULL reinterpret_cast<void *>(0)
-#endif
 
 /** 
 * Driver for Camera Link cards. 
@@ -58,7 +22,7 @@
 
 
 
-class ADCameralink : public ADDriver {
+class epicsShareClass ADCameralink : public ADDriver {
  public:
   ADCameralink(const char *portName, const char *ADCameralinkPort,
                int numparams, int maxBuffers, size_t maxMemory, int priority,
