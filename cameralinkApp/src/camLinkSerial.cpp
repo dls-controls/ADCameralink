@@ -17,12 +17,11 @@
 #include <cantProceed.h>
 
 #include <iocsh.h>
-#include <epicsExport.h>
 #include <epicsExit.h>
 
-#include <asynDriver.h>
-#define epicsExportSharedSymbols
-#include <shareLib.h>
+#include <asynPortDriver.h>
+
+#include <epicsExport.h>
 #include "camLinkSerial.h"
 
 static const char *driverName = "camLinkSerial";
