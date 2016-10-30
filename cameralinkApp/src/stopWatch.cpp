@@ -1,4 +1,6 @@
 
+#include <epicsExport.h>
+
 #include "stopWatch.h"
 
 stopWatch::stopWatch() { currenttime = 0.0; }
