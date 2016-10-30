@@ -17,7 +17,6 @@
 #include "sw_com_port.h"
 #include "logfile.h"
 
-
 #ifdef _WIN32
 #include "cl_com_port2.h"
 #endif
@@ -29,8 +28,6 @@
  * Class for serial port on grabber. Acts like asyn rs232 driver.
  */
 
-
- 
 class epicsShareFunc camLinkSerial : public asynPortDriver {
  public:
   camLinkSerial(const char *portName, const char *comportname, int maxAddr,
