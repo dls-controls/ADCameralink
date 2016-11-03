@@ -22,6 +22,8 @@
 #include <string.h>
 #include "time.h"
 
+#include <shareLib.h>
+
 /*
  * Double incluson protection.
  */
@@ -32,7 +34,7 @@
          * Class for
          */
 
-class stopWatch {
+class epicsShareClass stopWatch {
  public:
   stopWatch();
 

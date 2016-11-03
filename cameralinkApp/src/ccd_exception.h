@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <shareLib.h>
 /*
  * Double incluson protection.
  */
@@ -39,7 +40,7 @@
  */
 
 // class EXPORT ccd_exception
-class ccd_exception {
+class epicsShareClass ccd_exception {
  public:
   enum error_code { ok, xfer_not_starting, not_implemented, unknown };
 
