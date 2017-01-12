@@ -7,6 +7,9 @@
  */
 
 #include "siswSerialPort.h"
+
+#include <epicsThread.h>
+
 //#include <windows.h>
 
 #ifdef USE_SISW
@@ -199,11 +202,7 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
   int stat = -1;
   while (stat < 0 && !could_not_init) {
 
-#ifdef _WIN32
-  Sleep(1);//ms
-#else
-  usleep(1000);//us
-#endif
+    epicsThreadSleep(0.001);
   
     stat = clSerialInit(cardnum, &serial_ref);
 	char mm[256];
