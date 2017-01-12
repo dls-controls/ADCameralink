@@ -4,9 +4,50 @@
  *@author Timothy Madden
  *@date Jan 2012
  */
+#include <stddef.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <ctype.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
+#include <epicsTime.h>
+#include <epicsThread.h>
+#include <epicsEvent.h>
+#include <epicsTimer.h>
+#include <epicsMutex.h>
+#include <epicsStdlib.h>
+#include <epicsString.h>
+#include <epicsStdio.h>
+#include <epicsMutex.h>
+#include <cantProceed.h>
+#include <iocsh.h>
 
+#include <asynOctetSyncIO.h>
 
+#include "ADDriver.h"
+#define _ADIOC_
+#include "grabberInterface.h"
+
+#include "comportInterface.h"
+#include "logfile.h"
+#include "ccd_exception.h"
+#include "coreco.h"
+#include "siliconSoftware.h"
+#include "stopWatch.h"
+#include "siswSerialPort.h"
+
+#include <math.h>
+#include "time.h"
+
+#ifndef _WIN32
+#define NULL reinterpret_cast<void *>(0)
+#endif
+
+#include <epicsExport.h>
 #include "ADCameralink.h"
 #include "softwareGrabber.h"
 

@@ -12,6 +12,7 @@
  * Include files.
  */
 
+ #include <epicsExport.h>
 #include "ccd_exception.h"
 
 /**

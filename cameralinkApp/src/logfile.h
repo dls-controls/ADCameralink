@@ -15,9 +15,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <shareLib.h>
+
 //let logfile.cpp use asynPrint instead of printf
 #ifdef LOGFILE_USE_ASYN
-#include "asynPortDriver.h"
+#include "asynDriver.h"
 #endif
 
 /*
@@ -33,7 +35,7 @@
  */
  
 
-class log_file {
+class epicsShareClass log_file {
  public:
   // make file object.
   log_file(char* filename);

@@ -16,7 +16,7 @@
 #include <string>
 #include "time.h"
 #include "comportInterface.h"
-//#include "CCD_exception.h"
+//#include "ccd_exception.h"
 #include "logfile.h"
 #include <queue>
 /*

@@ -9,18 +9,21 @@
 
 #include <time.h>
 #include <stdio.h>
+#ifdef _WIN32
+  #include <io.h>
+  #define access _access
+  #define F_OK 0
+#else
+  #include <unistd.h>
+#endif
 
+#ifdef LOGFILE_USE_ASYN
+#include "asynDriver.h"
+#endif
+
+#include <epicsExport.h>
 #include "logfile.h"
 
-#ifdef _WIN32
-#include <io.h>
-#define access _access
-#define F_OK 0
-
-#else
-
-#include <unistd.h>
-#endif
 
 /**
  *
